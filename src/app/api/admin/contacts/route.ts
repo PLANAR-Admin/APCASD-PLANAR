@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { adminAuth } from "@/lib/admin-auth";
-import { storage } from "@/lib/storage";
+import { supabase } from "@/lib/supabase";
 
 function getToken(request: NextRequest): string | null {
   return request.cookies.get("admin-token")?.value ?? null;
@@ -16,7 +16,11 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const contacts = storage.contacts.getAll();
+    const { data: contacts, error } = await supabase
+      .from("contacts")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
     return NextResponse.json({ ok: true, contacts });
   } catch (error) {
     console.error("Failed to get contacts:", error);
@@ -47,13 +51,8 @@ export async function DELETE(request: NextRequest) {
   }
 
   try {
-    const success = storage.contacts.delete(id);
-    if (!success) {
-      return NextResponse.json(
-        { ok: false, message: "Contact not found" },
-        { status: 404 }
-      );
-    }
+    const { error } = await supabase.from("contacts").delete().eq("id", id);
+    if (error) throw error;
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Failed to delete contact:", error);
