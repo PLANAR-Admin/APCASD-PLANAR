@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Breadcrumb } from "@/components/services/Breadcrumb";
 import { ContactForm } from "@/components/ContactForm";
 import { SITE } from "@/lib/site";
@@ -25,7 +26,9 @@ export default function ContactPage() {
         </p>
 
         <div className="mt-10">
-          <ContactForm />
+          <Suspense fallback={<div className="h-96 animate-pulse rounded-xl bg-surface" />}>
+            <ContactForm />
+          </Suspense>
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-4 text-sm text-muted sm:grid-cols-3">
