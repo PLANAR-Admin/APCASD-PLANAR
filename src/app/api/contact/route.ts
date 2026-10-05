@@ -59,10 +59,11 @@ export async function POST(request: NextRequest) {
       );
     }
     console.log("New contact enquiry saved:", submission.email);
+    return NextResponse.json({ ok: true, message: "Thank you, we received your message.", _debug: { data, supabaseUrl: process.env.SUPABASE_URL?.substring(0, 40) } });
   } catch (error) {
     console.error("Failed to save contact:", error);
     return NextResponse.json(
-      { ok: false, message: "Something went wrong, please try again." },
+      { ok: false, message: "Something went wrong, please try again.", _debug: String(error) },
       { status: 500 }
     );
   }
