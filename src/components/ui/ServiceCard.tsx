@@ -10,7 +10,11 @@ export function ServiceCard({ service }: { service: Service }) {
       className="cursor-hover group relative flex aspect-[4/3] flex-col justify-end overflow-hidden rounded-2xl text-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
     >
       <Image
-        src={`/images/services/${service.slug}.jpg`}
+        src={
+          service.slug === "annual-day-celebrations"
+            ? `/images/services/${service.slug}.webp`
+            : `/images/services/${service.slug}.jpg`
+        }
         alt=""
         fill
         sizes="(min-width: 1024px) 33vw, 50vw"
