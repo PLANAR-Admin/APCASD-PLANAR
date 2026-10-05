@@ -13,7 +13,7 @@ const cspHeader = `
   style-src 'self' 'unsafe-inline';
   img-src 'self' blob: data: https://images.unsplash.com https://plus.unsplash.com https://ptc-p-001.sitecorecontenthub.cloud;
   font-src 'self';
-  connect-src 'self';
+  connect-src 'self' https://*.supabase.co;
   object-src 'none';
   base-uri 'self';
   form-action 'self';

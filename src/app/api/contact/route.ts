@@ -47,10 +47,20 @@ export async function POST(request: NextRequest) {
   // Save to Supabase
   try {
     const { error } = await supabase.from("contacts").insert([submission]);
-    if (error) console.error("Failed to save contact:", error);
-    else console.log("New contact enquiry saved:", submission.email);
+    if (error) {
+      console.error("Supabase insert error:", JSON.stringify(error));
+      return NextResponse.json(
+        { ok: false, message: "Failed to save your enquiry. Please try again." },
+        { status: 500 }
+      );
+    }
+    console.log("New contact enquiry saved:", submission.email);
   } catch (error) {
     console.error("Failed to save contact:", error);
+    return NextResponse.json(
+      { ok: false, message: "Something went wrong, please try again." },
+      { status: 500 }
+    );
   }
 
   return NextResponse.json({ ok: true, message: "Thank you, we received your message." });
