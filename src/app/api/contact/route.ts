@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { contactSchema } from "@/lib/validations/contact";
 import { isRateLimited } from "@/lib/security/rate-limit";
-import { storage } from "@/lib/storage";
+import { supabase } from "@/lib/supabase";
 
 function getClientIp(request: NextRequest) {
   const forwardedFor = request.headers.get("x-forwarded-for");
@@ -44,10 +44,11 @@ export async function POST(request: NextRequest) {
   const { website: _honeypot, ...submission } = parsed.data;
   void _honeypot;
 
-  // Save to storage
+  // Save to Supabase
   try {
-    storage.contacts.add(submission);
-    console.log("New contact enquiry:", submission);
+    const { error } = await supabase.from("contacts").insert([submission]);
+    if (error) console.error("Failed to save contact:", error);
+    else console.log("New contact enquiry saved:", submission.email);
   } catch (error) {
     console.error("Failed to save contact:", error);
   }
