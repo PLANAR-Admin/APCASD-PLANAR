@@ -1,0 +1,16 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="itGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#itGradient)"/>
+  <circle cx="80" cy="80" r="30" fill="#FCD34D" opacity="0.8"/>
+  <circle cx="320" cy="80" r="35" fill="#F87171" opacity="0.7"/>
+  <circle cx="200" cy="200" r="40" fill="#60A5FA" opacity="0.9"/>
+  <rect x="50" y="130" width="15" height="80" fill="#FCD34D" opacity="0.8" rx="3"/>
+  <rect x="335" y="150" width="15" height="60" fill="#F87171" opacity="0.8" rx="3"/>
+  <rect x="192" y="100" width="16" height="120" fill="#60A5FA" opacity="0.9" rx="3"/>
+  <text x="200" y="280" font-size="24" font-weight="bold" text-anchor="middle" fill="white">TECHNOLOGY</text>
+</svg>

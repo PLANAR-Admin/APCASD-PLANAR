@@ -1,0 +1,19 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="pharmaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4C1D95;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#pharmaGradient)"/>
+  <g opacity="0.9">
+    <rect x="70" y="70" width="30" height="90" rx="8" fill="#DBEAFE"/>
+    <rect x="110" y="50" width="30" height="110" rx="8" fill="#BFDBFE"/>
+    <rect x="150" y="90" width="30" height="70" rx="8" fill="#FEE2E2"/>
+    <rect x="190" y="60" width="30" height="100" rx="8" fill="#DBEAFE"/>
+    <rect x="230" y="80" width="30" height="80" rx="8" fill="#FCD34D"/>
+    <rect x="270" y="70" width="30" height="90" rx="8" fill="#BFDBFE"/>
+    <rect x="310" y="50" width="30" height="110" rx="8" fill="#FEE2E2"/>
+  </g>
+  <text x="200" y="280" font-size="24" font-weight="bold" text-anchor="middle" fill="white">PHARMACEUTICALS</text>
+</svg>

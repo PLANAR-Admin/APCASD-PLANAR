@@ -1,0 +1,16 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="autoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#DC2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#991B1B;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#autoGradient)"/>
+  <ellipse cx="100" cy="150" rx="50" ry="35" fill="#FEE2E2" opacity="0.9"/>
+  <ellipse cx="300" cy="150" rx="50" ry="35" fill="#FEE2E2" opacity="0.9"/>
+  <rect x="60" y="140" width="280" height="30" rx="8" fill="#FCD34D" opacity="0.8"/>
+  <circle cx="95" cy="170" r="12" fill="#1F2937"/>
+  <circle cx="305" cy="170" r="12" fill="#1F2937"/>
+  <rect x="150" y="100" width="100" height="40" rx="4" fill="#BFDBFE" opacity="0.8"/>
+  <text x="200" y="280" font-size="24" font-weight="bold" text-anchor="middle" fill="white">AUTOMOTIVE</text>
+</svg>

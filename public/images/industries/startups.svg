@@ -1,0 +1,16 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="startupsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0369A1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0284C7;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#startupsGradient)"/>
+  <g opacity="0.9">
+    <polygon points="200,60 240,140 200,120 160,140" fill="#FCD34D"/>
+    <polygon points="200,60 235,150 200,125 165,150" fill="#BFDBFE"/>
+    <polygon points="200,60 225,160 200,130 175,160" fill="#FEE2E2"/>
+    <circle cx="200" cy="180" r="25" fill="#FCD34D"/>
+  </g>
+  <text x="200" y="280" font-size="24" font-weight="bold" text-anchor="middle" fill="white">STARTUPS</text>
+</svg>
