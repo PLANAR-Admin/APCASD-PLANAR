@@ -45,12 +45,8 @@ export async function POST(request: NextRequest) {
   void _honeypot;
 
   // Save to Supabase
-  console.log("SUPABASE_URL set:", !!process.env.SUPABASE_URL);
-  console.log("SUPABASE_ANON_KEY set:", !!process.env.SUPABASE_ANON_KEY);
   try {
-    const { data, error } = await supabase.from("contacts").insert([submission]).select();
-    console.log("Supabase response data:", JSON.stringify(data));
-    console.log("Supabase response error:", JSON.stringify(error));
+    const { error } = await supabase.from("contacts").insert([submission]);
     if (error) {
       console.error("Supabase insert error:", JSON.stringify(error));
       return NextResponse.json(
@@ -59,11 +55,10 @@ export async function POST(request: NextRequest) {
       );
     }
     console.log("New contact enquiry saved:", submission.email);
-    return NextResponse.json({ ok: true, message: "Thank you, we received your message.", _debug: { data, supabaseUrl: process.env.SUPABASE_URL?.substring(0, 40) } });
   } catch (error) {
     console.error("Failed to save contact:", error);
     return NextResponse.json(
-      { ok: false, message: "Something went wrong, please try again.", _debug: String(error) },
+      { ok: false, message: "Something went wrong, please try again." },
       { status: 500 }
     );
   }
