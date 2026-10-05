@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { adminAuth } from "@/lib/admin-auth";
-import { storage } from "@/lib/storage";
+import { supabase } from "@/lib/supabase";
 
 const listingSchema = z.object({
   title: z.string().min(1).max(200),
@@ -25,7 +25,11 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const listings = storage.careers.getListings();
+    const { data: listings, error } = await supabase
+      .from("job_listings")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
     return NextResponse.json({ ok: true, listings });
   } catch (error) {
     console.error("Failed to get listings:", error);
@@ -64,7 +68,12 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const listing = storage.careers.addListing(parsed.data);
+    const { data: listing, error } = await supabase
+      .from("job_listings")
+      .insert([parsed.data])
+      .select()
+      .single();
+    if (error) throw error;
     return NextResponse.json({ ok: true, listing }, { status: 201 });
   } catch (error) {
     console.error("Failed to create listing:", error);
@@ -113,13 +122,11 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
-    const success = storage.careers.updateListing(id, parsed.data);
-    if (!success) {
-      return NextResponse.json(
-        { ok: false, message: "Listing not found" },
-        { status: 404 }
-      );
-    }
+    const { error } = await supabase
+      .from("job_listings")
+      .update(parsed.data)
+      .eq("id", id);
+    if (error) throw error;
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Failed to update listing:", error);
@@ -150,13 +157,8 @@ export async function DELETE(request: NextRequest) {
   }
 
   try {
-    const success = storage.careers.deleteListing(id);
-    if (!success) {
-      return NextResponse.json(
-        { ok: false, message: "Listing not found" },
-        { status: 404 }
-      );
-    }
+    const { error } = await supabase.from("job_listings").delete().eq("id", id);
+    if (error) throw error;
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Failed to delete listing:", error);

@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { adminAuth } from "@/lib/admin-auth";
-import { storage } from "@/lib/storage";
+import { supabase } from "@/lib/supabase";
 
 function getToken(request: NextRequest): string | null {
   return request.cookies.get("admin-token")?.value ?? null;
@@ -16,7 +16,11 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const applications = storage.careers.getApplications();
+    const { data: applications, error } = await supabase
+      .from("job_applications")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
     return NextResponse.json({ ok: true, applications });
   } catch (error) {
     console.error("Failed to get applications:", error);
@@ -47,13 +51,8 @@ export async function DELETE(request: NextRequest) {
   }
 
   try {
-    const success = storage.careers.deleteApplication(id);
-    if (!success) {
-      return NextResponse.json(
-        { ok: false, message: "Application not found" },
-        { status: 404 }
-      );
-    }
+    const { error } = await supabase.from("job_applications").delete().eq("id", id);
+    if (error) throw error;
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Failed to delete application:", error);

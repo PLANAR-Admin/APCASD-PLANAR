@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { storage } from "@/lib/storage";
+import { supabase } from "@/lib/supabase";
 import { isRateLimited } from "@/lib/security/rate-limit";
 
 function getClientIp(request: NextRequest) {
@@ -19,7 +19,6 @@ const applicationSchema = z.object({
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
 
-  // Rate limiting for applications
   if (isRateLimited(`application:${ip}`, 5, 24 * 60 * 60 * 1000)) {
     return NextResponse.json(
       { ok: false, message: "Too many applications from this location. Please try again later." },
@@ -37,7 +36,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Extract form fields
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const phone = (formData.get("phone") as string) || undefined;
@@ -45,15 +43,7 @@ export async function POST(request: NextRequest) {
   const coverLetter = (formData.get("coverLetter") as string) || undefined;
   const resume = formData.get("resume") as File;
 
-  // Validate required fields
-  const parsed = applicationSchema.safeParse({
-    name,
-    email,
-    phone,
-    position,
-    coverLetter,
-  });
-
+  const parsed = applicationSchema.safeParse({ name, email, phone, position, coverLetter });
   if (!parsed.success) {
     return NextResponse.json(
       { ok: false, message: "Please check all required fields." },
@@ -61,7 +51,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Validate resume file
   if (!resume || resume.size === 0) {
     return NextResponse.json(
       { ok: false, message: "Please upload your CV/Resume." },
@@ -69,7 +58,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Check file size (10MB max)
   if (resume.size > 10 * 1024 * 1024) {
     return NextResponse.json(
       { ok: false, message: "CV file size must be less than 10MB." },
@@ -77,7 +65,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Validate file type
   const allowedTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
   if (!allowedTypes.includes(resume.type)) {
     return NextResponse.json(
@@ -87,19 +74,19 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const buffer = await resume.arrayBuffer();
     const application = {
       name: parsed.data.name,
       email: parsed.data.email,
-      phone: parsed.data.phone,
+      phone: parsed.data.phone ?? null,
       position: parsed.data.position,
-      coverLetter: parsed.data.coverLetter,
+      cover_letter: parsed.data.coverLetter ?? null,
       resume: `${resume.name} (${resume.size} bytes)`,
     };
 
-    storage.careers.addApplication(application);
-    console.log("New career application:", application);
+    const { error } = await supabase.from("job_applications").insert([application]);
+    if (error) throw error;
 
+    console.log("New career application:", application.email);
     return NextResponse.json({ ok: true, message: "Application submitted successfully!" });
   } catch (error) {
     console.error("Failed to save application:", error);
