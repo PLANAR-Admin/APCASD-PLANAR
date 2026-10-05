@@ -45,8 +45,12 @@ export async function POST(request: NextRequest) {
   void _honeypot;
 
   // Save to Supabase
+  console.log("SUPABASE_URL set:", !!process.env.SUPABASE_URL);
+  console.log("SUPABASE_ANON_KEY set:", !!process.env.SUPABASE_ANON_KEY);
   try {
-    const { error } = await supabase.from("contacts").insert([submission]);
+    const { data, error } = await supabase.from("contacts").insert([submission]).select();
+    console.log("Supabase response data:", JSON.stringify(data));
+    console.log("Supabase response error:", JSON.stringify(error));
     if (error) {
       console.error("Supabase insert error:", JSON.stringify(error));
       return NextResponse.json(
