@@ -141,8 +141,8 @@ export function Navbar() {
               </div>
             ) : (
               <Link
-                key={link.href}
-                href={link.href}
+                key={"href" in link ? link.href : link.label}
+                href={"href" in link ? link.href : "#"}
                 className="cursor-hover whitespace-nowrap text-[13px] font-semibold text-foreground/80 transition-colors hover:text-crimson lg:text-sm"
               >
                 {link.label}
@@ -272,8 +272,8 @@ export function Navbar() {
                 </div>
               ) : (
                 <Link
-                  key={link.href}
-                  href={link.href}
+                  key={"href" in link ? link.href : link.label}
+                  href={"href" in link ? link.href : "#"}
                   className="rounded-xl px-3 py-3 text-sm font-semibold text-foreground hover:text-crimson"
                   onClick={() => setMobileOpen(false)}
                 >

@@ -9,6 +9,7 @@ interface JobListing {
   id: string;
   title: string;
   department: string;
+  active?: boolean;
 }
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
