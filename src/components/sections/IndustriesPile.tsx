@@ -4,16 +4,16 @@ import { useEffect, useRef } from "react";
 import { INDUSTRIES } from "@/lib/site";
 
 const TAG_STYLES: { bg: string; text: string }[] = [
-  { bg: "bg-indigo-300", text: "text-white" },
-  { bg: "bg-amber-200", text: "text-darkblue" },
-  { bg: "bg-orange-300", text: "text-white" },
-  { bg: "bg-teal-300", text: "text-white" },
-  { bg: "bg-sky-300", text: "text-white" },
-  { bg: "bg-pink-300", text: "text-white" },
-  { bg: "bg-red-300", text: "text-white" },
-  { bg: "bg-violet-300", text: "text-white" },
-  { bg: "bg-emerald-300", text: "text-white" },
-  { bg: "bg-blue-300", text: "text-white" },
+  { bg: "bg-indigo-600", text: "text-white" },
+  { bg: "bg-amber-500", text: "text-white" },
+  { bg: "bg-orange-500", text: "text-white" },
+  { bg: "bg-teal-600", text: "text-white" },
+  { bg: "bg-sky-600", text: "text-white" },
+  { bg: "bg-pink-600", text: "text-white" },
+  { bg: "bg-red-600", text: "text-white" },
+  { bg: "bg-violet-600", text: "text-white" },
+  { bg: "bg-emerald-600", text: "text-white" },
+  { bg: "bg-blue-600", text: "text-white" },
 ];
 
 export function IndustriesPile() {
@@ -52,17 +52,18 @@ export function IndustriesPile() {
       const engine = Engine.create({ gravity: { x: 0, y: 2.2 } });
       const world = engine.world;
 
-      // Inset the walls so a pill rotated by a collision still keeps its
-      // corners inside the container — its bounding box grows past its
-      // resting width/height whenever angle !== 0. A ceiling is included too
-      // so a dragged tag can never be thrown out past the top edge.
-      const MARGIN = 24;
+      // Walls sit exactly on the container edges so pills can't escape the border.
+      const MARGIN = 20;
       const wallOpts = { isStatic: true, friction: 0.5, render: { visible: false } };
       World.add(world, [
-        Bodies.rectangle(bounds.width / 2, bounds.height - MARGIN + 30, bounds.width + 100, 60, wallOpts),
-        Bodies.rectangle(bounds.width / 2, MARGIN - 30, bounds.width + 100, 60, wallOpts),
-        Bodies.rectangle(MARGIN - 30, bounds.height / 2, 60, bounds.height + 200, wallOpts),
-        Bodies.rectangle(bounds.width - MARGIN + 30, bounds.height / 2, 60, bounds.height + 200, wallOpts),
+        // floor
+        Bodies.rectangle(bounds.width / 2, bounds.height - MARGIN, bounds.width, 40, wallOpts),
+        // ceiling
+        Bodies.rectangle(bounds.width / 2, MARGIN, bounds.width, 40, wallOpts),
+        // left wall
+        Bodies.rectangle(MARGIN, bounds.height / 2, 40, bounds.height, wallOpts),
+        // right wall
+        Bodies.rectangle(bounds.width - MARGIN, bounds.height / 2, 40, bounds.height, wallOpts),
       ]);
 
       const els = tagRefs.current.filter((el): el is HTMLSpanElement => el !== null);
@@ -70,11 +71,9 @@ export function IndustriesPile() {
         const rect = el.getBoundingClientRect();
         const w = rect.width;
         const h = rect.height;
-        const span = Math.max(bounds.width - w - MARGIN * 2, 0);
-        const x = w / 2 + MARGIN + Math.random() * span;
-        // Spawn just under the ceiling wall (not off-screen above it) so
-        // every tag actually falls and settles inside the walled bounds.
-        const y = MARGIN + h / 2 + Math.random() * 30;
+        const span = Math.max(bounds.width - w - MARGIN * 4, 0);
+        const x = w / 2 + MARGIN * 2 + Math.random() * span;
+        const y = MARGIN * 2 + h / 2 + Math.random() * 40;
         const body = Bodies.rectangle(x, y, w, h, {
           friction: 0.3,
           frictionAir: 0.03,

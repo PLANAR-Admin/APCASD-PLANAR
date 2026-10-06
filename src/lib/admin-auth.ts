@@ -18,9 +18,15 @@ function getAdminPassword(): string {
   return password;
 }
 
-// Derive a signing secret from the admin password
+// Prefer a dedicated random secret so a captured token can't be used to
+// brute-force the admin password offline. Falls back to the password-derived key.
 function getSecret(): Buffer {
-  return crypto.createHash("sha256").update(getAdminPassword()).digest();
+  const secret = process.env.ADMIN_SESSION_SECRET || getAdminPassword();
+  return crypto.createHash("sha256").update(secret).digest();
+}
+
+function sha(value: string): Buffer {
+  return crypto.createHash("sha256").update(value).digest();
 }
 
 function signPayload(payload: string): string {
@@ -57,9 +63,7 @@ export const adminAuth = {
     try {
       const expected = getAdminPassword();
       // Timing-safe comparison
-      const match =
-        password.length === expected.length &&
-        crypto.timingSafeEqual(Buffer.from(password), Buffer.from(expected));
+      const match = crypto.timingSafeEqual(sha(password), sha(expected));
       recordLoginAttempt(ip, match);
       return match;
     } catch (error) {

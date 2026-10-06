@@ -40,11 +40,12 @@ export async function POST(request: NextRequest) {
   }
 
   const token = adminAuth.createSession();
-  const response = NextResponse.json({ ok: true, token });
+  const response = NextResponse.json({ ok: true });
   response.cookies.set("admin-token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "strict",
+    path: "/api/admin",
     maxAge: 24 * 60 * 60, // 24 hours
   });
 

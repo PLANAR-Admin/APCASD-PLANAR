@@ -12,7 +12,7 @@ interface Contact {
   phone?: string;
   service?: string;
   message: string;
-  createdAt: string;
+  created_at: string;
 }
 
 interface CareerApplication {
@@ -21,8 +21,8 @@ interface CareerApplication {
   email: string;
   phone?: string;
   position: string;
-  coverLetter?: string;
-  createdAt: string;
+  cover_letter?: string;
+  created_at: string;
 }
 
 interface CareerListing {
@@ -32,7 +32,7 @@ interface CareerListing {
   description: string;
   requirements: string[];
   active: boolean;
-  createdAt: string;
+  created_at: string;
 }
 
 type Tab = "contacts" | "applications" | "listings";
@@ -235,8 +235,8 @@ export default function AdminDashboard() {
     });
   }
 
-  function handleLogout() {
-    document.cookie = "admin-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+  async function handleLogout() {
+    await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
     router.push("/admin/login");
   }
 
@@ -342,7 +342,7 @@ export default function AdminDashboard() {
                         </div>
                         <div className="flex flex-col gap-2">
                           <p className="text-xs text-muted">
-                            {new Date(contact.createdAt).toLocaleString()}
+                            {new Date(contact.created_at).toLocaleString()}
                           </p>
                           <p className="text-sm text-foreground line-clamp-2">
                             {contact.message}
@@ -387,11 +387,11 @@ export default function AdminDashboard() {
                         </div>
                         <div className="flex flex-col gap-2">
                           <p className="text-xs text-muted">
-                            {new Date(app.createdAt).toLocaleString()}
+                            {new Date(app.created_at).toLocaleString()}
                           </p>
-                          {app.coverLetter && (
+                          {app.cover_letter && (
                             <p className="text-sm text-foreground line-clamp-2">
-                              {app.coverLetter}
+                              {app.cover_letter}
                             </p>
                           )}
                         </div>
@@ -592,7 +592,7 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <p className="text-xs text-muted mt-3">
-                          Created: {new Date(listing.createdAt).toLocaleString()}
+                          Created: {new Date(listing.created_at).toLocaleString()}
                         </p>
                       </div>
                     ))

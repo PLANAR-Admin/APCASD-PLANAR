@@ -16,24 +16,55 @@ const AUTO_SWITCH_MS = 10000;
 
 export function ServicesTabs() {
   const [active, setActive] = useState<ServiceCategory>("events");
-  const userSelectedRef = useRef(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const userPickedRef = useRef(false);
   const services = getServicesByCategory(active);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (userSelectedRef.current) return;
-      setActive((prev) => (prev === "events" ? "hr-solutions" : "events"));
+  function startCycle() {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setActive((prev) => {
+        const nextIndex = (TABS.findIndex((t) => t.key === prev) + 1) % TABS.length;
+        return TABS[nextIndex].key;
+      });
     }, AUTO_SWITCH_MS);
-    return () => clearInterval(interval);
+  }
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          // Reset to Events each time it comes into view (unless user already picked)
+          if (!userPickedRef.current) {
+            setActive("events");
+          }
+          startCycle();
+        } else {
+          if (intervalRef.current) clearInterval(intervalRef.current);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(section);
+    return () => {
+      observer.disconnect();
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, []);
 
   function handleSelect(key: ServiceCategory) {
-    userSelectedRef.current = true;
+    userPickedRef.current = true;
     setActive(key);
+    startCycle();
   }
 
   return (
-    <section className="mx-auto max-w-6xl px-6 py-12 sm:py-16">
+    <section ref={sectionRef} className="mx-auto max-w-6xl px-6 py-12 sm:py-16">
       <div className="mx-auto max-w-2xl text-center">
         <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-crimson">
           Our Services
